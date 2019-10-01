@@ -42,7 +42,7 @@
         {% if show_details %}<div class="col text-center"><a href="{% url 'shuttle:index' %}">Shuttles</a></div>{% endif %}
         {% if show_details and shuttle.route %}<div class="col text-center"><a href="{{ shuttle.route }}" target="_blank">RouteLink</a></div>{% endif %}
         {% if not show_details %}<div class="col text-center"><a href="{% url 'shuttle:detail' shuttle.id %}">Details/Signup</a></div>{% endif %}
-        <div class="col text-center"><a href="{% url 'admin:shuttle_shuttle_change' shuttle.id %}">Admin</a></div>
+        <div class="col text-center"><a href="{% url 'admin:shuttle_shuttle_change' shuttle.id %}" target="_blank">Admin</a></div>
       </div>
     </div>
   </div>
