@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% load markdownify %}
+{% load mathfilters %}
+
+{% block title %}
+fahr'n fahr'n fahr'n auf der Autobahn
+{% endblock title %}
+
+{% block content %}
+{% if future_shuttle_list %}
+{% for shuttle in future_shuttle_list %}
+{% include 'shuttle/card.html' %}
+{% endfor %}
+{% else %}
+<p>No more shuttles</p>
+{% endif %}
+{% endblock content %}

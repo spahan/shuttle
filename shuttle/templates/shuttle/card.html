@@ -1,0 +1,49 @@
+{% load markdownify %}
+{% load mathfilters %}
+
+<div class="card" id="shuttle{{ shuttle.id }}" style="padding: 0 0.2em 0 0.2em;">
+  <h5 class="card-title" style="margin-top:.75rem;" {% if not show_details %}data-toggle="collapse" data-target="#shuttle{{ shuttle.id}} .card-text" {% endif %}>
+    <div style="float:right;text-align:right;margin-bottom:0;">Tag {{ shuttle.departure | date:'d H:i' }}</div>
+    <div style="margin-bottom:0;">{{ shuttle.title }}</div>
+  </h5>
+  <div class="card-text {% if not show_details %}collapse{% endif %}">
+    {% if not shuttle.driver and session.driver_id %}
+    <div class="alert alert-danger">This Shuttle requires a driver! People will not be able to Signup until a driver has been assigned. <a href="{% url 'shuttle:driver' shuttle.id session.driver_id %}">Sign me up as driver</a></div>
+    {% endif %}
+    <div class="alert alert-dark">
+      <h6>Description</h6>
+      {{ shuttle.description|markdownify }}
+    </div>
+    {% if show_details %}
+    <div class="alert alert-dark">
+      <h6>Passengers</h6>
+      <ul>
+        {% for passenger in shuttle.passenger_set.all %}
+          <li>{{ passenger.nick }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% if shuttle.driver and shuttle.car.space > shuttle.passenger_set.count %}
+    <div class="alert alert-dark">
+      <h6>Sign me up</h6>
+      <form class="form-inline" action="{% url 'shuttle:add' shuttle.id %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit" class="btn btn-primary">Add</button>
+      </form>
+    </div>
+    {% endif %}
+    {% endif %}
+    <div class="alert alert-dark">
+      <h6>Infos</h6>
+      <div class="row">
+        <div class="col text-center">Empty Seats: {{ shuttle.car.space|sub:shuttle.passenger_set.count }}</div>
+        {% if show_details and shuttle.driver %}<div class="col text-center">Your Driver: {{ shuttle.driver.nick }}</div>{% endif %}
+        {% if show_details %}<div class="col text-center"><a href="{% url 'shuttle:index' %}">Shuttles</a></div>{% endif %}
+        {% if show_details and shuttle.route %}<div class="col text-center"><a href="{{ shuttle.route }}" target="_blank">RouteLink</a></div>{% endif %}
+        {% if not show_details %}<div class="col text-center"><a href="{% url 'shuttle:detail' shuttle.id %}">Details/Signup</a></div>{% endif %}
+        <div class="col text-center"><a href="{% url 'admin:shuttle_shuttle_change' shuttle.id %}">Admin</a></div>
+      </div>
+    </div>
+  </div>
+</div>
