@@ -1,0 +1,6 @@
+django
+django-phonenumber-field
+phonenumbers
+django-bootstrap4
+django-markdownify
+django-mathfilters
