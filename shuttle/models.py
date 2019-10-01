@@ -15,7 +15,7 @@ class Car(models.Model):
 class Driver(models.Model):
     nick = models.CharField(max_length=20)
     phone = PhoneNumberField(null=True, blank=True)
-    mail = models.EmailField(null=True, blank=True)
+    mail = models.EmailField()
     token = models.CharField(max_length=12, default=get_random_string, editable=False)
     def __str__(self):
         return self.nick
