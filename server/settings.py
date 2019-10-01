@@ -25,7 +25,7 @@ SECRET_KEY = 'ajno&ght&-0@(vq^wr=y*$)*dhz*2b*++$idiu3#j#+)4m6*vp'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['homer.spahan.ch']
 
 
 # Application definition
@@ -124,6 +124,34 @@ USE_TZ = True
 
 STATIC_URL = '/shuttle/static/'
 STATIC_ROOT = '/var/www/django/shuttle.spahan.ch/static'
+STATICFILES_DIRS = [
+    ('bs', '/var/www/django/shuttle.spahan.ch/bootstrap'),
+]
 
 #EMAIL_HOST = 'localhost'
 #EMAIL_PORT = 1025
+
+#Bootstrap4
+BOOTSTRAP4 = {
+    "css_url": {
+        "href": "/shuttle/static/bs/bootstrap.min.css",
+        "integrity": "sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB",
+    },
+    "javascript_url": {
+        "url": "/shuttle/static/bs/bootstrap.min.js",
+        "integrity": "sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T",
+    },
+    "jquery_url": {
+        "url": "/shuttle/static/bs/jquery-3.3.1.min.js",
+        "integrity": "sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT",
+    },
+    "jquery_slim_url": {
+        "url": "/shuttle/static/bs/jquery-3.3.1.slim.min.js",
+        "integrity": "sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo",
+        "crossorigin": "anonymous",
+    },
+    "popper_url": {
+        "url": "/shuttle/static/bs/popper.min.js",
+        "integrity": "sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49",
+    },
+}
