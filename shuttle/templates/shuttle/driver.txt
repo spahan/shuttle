@@ -1,0 +1,10 @@
+Ohai {{ driver.nick }}
+
+You have signed up as driver for the shuttle {{ shuttle }}.
+
+You can check the details and passenger list at {{ request.scheme }}://{{ request.get_host }}{% url 'shuttle:detail' shuttle.id %}
+{% if shuttle.route %}Thist link shows your route {{ shuttle.route }}{% endif %}
+
+If you want to resign from this shuttle, visit the LOC Helpdesk.
+
+Have Fun

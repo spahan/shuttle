@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.core.mail import send_mail
+from django.template.loader import render_to_string
 
 from datetime import datetime
 from .models import Shuttle,Passenger,Driver
@@ -52,6 +53,7 @@ def add_driver(request, shuttle_id, driver_id):
     shuttle.driver = driver
     shuttle.save()
     messages.success(request, 'You are now the driver for {}'.format(shuttle))
+    send_mail('Driver Information for {}'.format(shuttle), render_to_string('shuttle/driver.txt', {'shuttle':shuttle, 'driver': driver, 'request':request}), 'shuttle@spahan.ch', [ driver.mail ], fail_silently=True)
     return HttpResponseRedirect(reverse('shuttle:detail', args=(shuttle.id,)))
 
 def login(request):
