@@ -1,28 +1,29 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>
-			{% block title %}
-			{{ page_title|default:"Untitled Page" }}
-			{% endblock title %}
-		</title>
-	  {% load bootstrap4 %}
+  <head>
+    <meta charset="utf-8">
+    <title>
+      {% block title %}
+      {{ page_title|default:"Untitled Page" }}
+      {% endblock title %}
+    </title>
+    {% load bootstrap4 %}
     {% bootstrap_css %}
     {% bootstrap_javascript jquery='full' %}
     <link href="static/fa/css/all.css" rel="stylesheet" />
     <link href="static/fa/svgs/solid/bus.svg" rel="icon" />
-	</head>
+  </head>
 
-	<body>
-		<div class="container">
-			{% if error %}
-				{% load markdownify %}
-				<div class="alert alert-danger">{{ error|markdownify }}</div>
-			{% endif %}
-			{% block content %}
-			<p>Placeholder text in base template. Replace with page content.</p>
-			{% endblock content %}
-		</div>
-	</body>
+  <body>
+    <div class="container">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+      {% block content %}
+      <p>Placeholder text in base template. Replace with page content.</p>
+      {% endblock content %}
+    </div>
+  </body>
 </html>
