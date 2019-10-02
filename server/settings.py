@@ -25,7 +25,7 @@ SECRET_KEY = 'ajno&ght&-0@(vq^wr=y*$)*dhz*2b*++$idiu3#j#+)4m6*vp'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['homer.spahan.ch']
+ALLOWED_HOSTS = ['shuttle.spahan.ch']
 
 
 # Application definition
@@ -126,12 +126,12 @@ STATIC_URL = '/shuttle/static/'
 STATIC_ROOT = '/var/www/django/shuttle.spahan.ch/static'
 STATICFILES_DIRS = [
     ('bs', '/var/www/django/shuttle.spahan.ch/bootstrap'),
+    ('fa', '/var/www/django/shuttle.spahan.ch/fontawesome'),
 ]
 
 #EMAIL_HOST = 'localhost'
 #EMAIL_PORT = 1025
 
-#Bootstrap4
 BOOTSTRAP4 = {
     "css_url": {
         "href": "/shuttle/static/bs/bootstrap.min.css",
