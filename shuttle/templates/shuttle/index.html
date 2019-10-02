@@ -8,8 +8,8 @@ fahr'n fahr'n fahr'n auf der Autobahn
 {% endblock title %}
 
 {% block content %}
-{% if future_shuttle_list %}
-{% for shuttle in future_shuttle_list %}
+{% if shuttles %}
+{% for shuttle in shuttles %}
 {% include 'shuttle/card.html' %}
 {% endfor %}
 {% else %}

@@ -7,8 +7,8 @@
     <div style="margin-bottom:0;"><i class="fas fa-bus"></i> {{ shuttle.title }}</div>
   </h5>
   <div class="card-text {% if not show_details %}collapse{% endif %}">
-    {% if not shuttle.driver and session.driver_id %}
-    <div class="alert alert-danger">This Shuttle requires a driver! People will not be able to Signup until a driver has been assigned. <a href="{% url 'shuttle:driver' shuttle.id session.driver_id %}">Sign me up as driver</a></div>
+    {% if not shuttle.driver and request.session.driver_id %}
+    <div class="alert alert-danger">This Shuttle requires a driver! People will not be able to Signup until a driver has been assigned. <a href="{% url 'shuttle:driver' shuttle.id request.session.driver_id %}">Sign me up as driver</a></div>
     {% endif %}
     <div class="alert alert-dark">
       <h6>Description</h6>

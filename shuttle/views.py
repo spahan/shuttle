@@ -13,13 +13,13 @@ from .forms import PassengerForm
 # Create your views here.
 
 def index(request):
-    future_shuttle_list = Shuttle.objects.filter(departure__gt=datetime.now()).order_by('departure')[:10]
-    return render(request, 'shuttle/index.html', { 'future_shuttle_list':future_shuttle_list,'session': request.session, 'show_details': False})
+    shuttles = Shuttle.objects.filter(departure__gt=datetime.now()).order_by('departure')[:10]
+    return render(request, 'shuttle/index.html', { 'shuttles': shuttles, 'show_details': False})
 
 def detail(request, shuttle_id):
     shuttle = get_object_or_404(Shuttle, pk=shuttle_id)
     form = PassengerForm()
-    return render(request, 'shuttle/detail.html', { 'shuttle':shuttle, 'form':form, 'session': request.session, 'show_details': True })
+    return render(request, 'shuttle/detail.html', { 'shuttle':shuttle, 'form':form, 'show_details': True })
 
 def add_passenger(request, shuttle_id):
     if request.method == 'POST':
@@ -29,40 +29,39 @@ def add_passenger(request, shuttle_id):
             if form.is_valid():
                 passenger = Passenger(nick=form.cleaned_data['nick'], mail=form.cleaned_data['email'], shuttle=shuttle)
                 passenger.save()
+                messages.success(request, 'You have signed up for {}'.format(shuttle))
                 if form.cleaned_data['email']:
                     send_mail('Sign Up for Shuttle {}'.format(shuttle),"Ohai,\n\nYou have been signed up to the shuttle {}.\nTo remove yourself from the Shuttle open {}\n\nHave a nice day".format(shuttle, request.build_absolute_uri(reverse('shuttle:remove', args=[shuttle.id,passenger.token]))), 'shuttle@spahan.ch', [ form.cleaned_data['email'] ], fail_silently=False)
                 return HttpResponseRedirect(reverse('shuttle:detail', args=(shuttle.id,)))
         else:
+            messages.info(request, 'You can not sign up for this shuttle as it does not have a driver or car assigned. Please try again later.')
             return HttpResponseRedirect(reverse('shuttle:index'))
     else:
         form = PassengerForm()
-
-    #return HttpResponseRedirect(reverse('shuttle:detail', args=(shuttle.id,)))
     return render(request, 'shuttle/detail.html', { 'shuttle':shuttle, 'form':form })
 
 def remove_passenger(request, shuttle_id, token):
     shuttle = get_object_or_404(Shuttle, pk=shuttle_id)
     passenger = get_object_or_404(Passenger, token=token)
     passenger.delete()
+    messages.success(request, 'You have been signed off from {}'.format(shuttle))
     return HttpResponseRedirect(reverse('shuttle:index'))
 
-from django.http import HttpResponse
 def add_driver(request, shuttle_id, driver_id):
     shuttle = get_object_or_404(Shuttle, pk=shuttle_id)
     driver = get_object_or_404(Driver, pk=driver_id)
     shuttle.driver = driver
     shuttle.save()
+    messages.success(request, 'You are now the driver for {}'.format(shuttle))
     return HttpResponseRedirect(reverse('shuttle:detail', args=(shuttle.id,)))
 
 def login(request):
     if request.method == 'GET':
         driver = get_object_or_404(Driver, token=request.GET['token'])
         request.session['driver_id'] = driver.id
+        messages.success(request, 'You are loged in as {} now'.format(driver.nick))
     else:
-        try:
-            del request.session['driver_id']
-        except KeyError:
-            pass
+        messages.info(request, 'HAXXOR!')
     return HttpResponseRedirect(reverse('shuttle:index'))
 
 def logout(request):
