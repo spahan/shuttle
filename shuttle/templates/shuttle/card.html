@@ -3,8 +3,8 @@
 
 <div class="card" id="shuttle{{ shuttle.id }}" style="padding: 0 0.2em 0 0.2em;">
   <h5 class="card-title" style="margin-top:.75rem;" {% if not show_details %}data-toggle="collapse" data-target="#shuttle{{ shuttle.id}} .card-text" {% endif %}>
-    <div style="float:right;text-align:right;margin-bottom:0;">Tag {{ shuttle.departure | date:'d H:i' }}</div>
-    <div style="margin-bottom:0;">{{ shuttle.title }}</div>
+    <div style="float:right;text-align:right;margin-bottom:0;"><i class="far fa-clock"></i> Tag {{ shuttle.departure | date:'d H:i' }}</div>
+    <div style="margin-bottom:0;"><i class="fas fa-bus"></i> {{ shuttle.title }}</div>
   </h5>
   <div class="card-text {% if not show_details %}collapse{% endif %}">
     {% if not shuttle.driver and session.driver_id %}
