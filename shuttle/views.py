@@ -35,7 +35,7 @@ def add_passenger(request, shuttle_id):
             passenger.save()
             messages.success(request, 'You have signed up for {}'.format(shuttle))
             if form.cleaned_data['email']:
-                send_mail('Sign Up for Shuttle {}'.format(shuttle),"Ohai,\n\nYou have been signed up to the shuttle {}.\nTo remove yourself from the Shuttle open {}\n\nHave a nice day".format(shuttle, request.build_absolute_uri(reverse('shuttle:remove', args=[shuttle.id,passenger.token]))), 'shuttle@spahan.ch', [ form.cleaned_data['email'] ], fail_silently=True)
+                send_mail('Sign Up for Shuttle {}'.format(shuttle), render_to_string('shuttle/passenger.txt', {'shuttle':shuttle, 'passenger':passenger, 'request':request}), 'shuttle@spahan.ch', [ form.cleaned_data['email'] ], fail_silently=True)
         else:
             messages.warning(request,'There is a Problem with your input:' + ''.join(['{}: {}'.format(key, error) for key in form.errors.keys() for error in form.errors[key]]))
     return HttpResponseRedirect(reverse('shuttle:detail', args=(shuttle.id,)))

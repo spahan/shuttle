@@ -1,0 +1,6 @@
+Ohai {{ passenger.nick }},
+
+You have been signed up to the shuttle {{ shuttle }}.
+To remove yourself from the Shuttle open {{ request.scheme }}://{{ request.get_host }}{% url 'shuttle:remove' shuttle.id passenger.token %}
+
+Have Fun
