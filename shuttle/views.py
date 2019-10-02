@@ -12,7 +12,9 @@ from .forms import PassengerForm
 # Create your views here.
 
 def index(request):
-    shuttles = Shuttle.objects.filter(departure__gt=datetime.now()).order_by('departure')[:10]
+    shuttles = Shuttle.objects.filter(departure__gt=datetime.now()).order_by('departure')
+    if not 'driver_id' in request.session:
+        shuttles = shuttles.filter(driver__isnull = False)
     return render(request, 'shuttle/index.html', { 'shuttles': shuttles, 'show_details': False})
 
 def detail(request, shuttle_id):
@@ -60,7 +62,7 @@ def login(request):
     if request.method == 'GET':
         driver = get_object_or_404(Driver, token=request.GET['token'])
         request.session['driver_id'] = driver.id
-        messages.success(request, 'You are loged in as {} now'.format(driver.nick))
+        messages.success(request, 'You are logged in as {} now'.format(driver.nick))
     else:
         messages.info(request, 'HAXXOR!')
     return HttpResponseRedirect(reverse('shuttle:index'))
