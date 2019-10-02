@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.http import HttpResponseRedirect
-
+from django.contrib import messages
 from django.core.mail import send_mail
 
 
@@ -24,7 +24,7 @@ def detail(request, shuttle_id):
 def add_passenger(request, shuttle_id):
     if request.method == 'POST':
         shuttle = get_object_or_404(Shuttle, pk=shuttle_id)
-        if shuttle.car != None and shuttle.car.space > shuttle.passenger_set.count():
+        if shuttle.car != None and shuttle.driver !=None and shuttle.car.space > shuttle.passenger_set.count():
             form = PassengerForm(request.POST)
             if form.is_valid():
                 passenger = Passenger(nick=form.cleaned_data['nick'], mail=form.cleaned_data['email'], shuttle=shuttle)
