@@ -4,8 +4,6 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.core.mail import send_mail
 
-
-
 from datetime import datetime
 from .models import Shuttle,Passenger,Driver
 from .forms import PassengerForm
@@ -24,21 +22,22 @@ def detail(request, shuttle_id):
 def add_passenger(request, shuttle_id):
     if request.method == 'POST':
         shuttle = get_object_or_404(Shuttle, pk=shuttle_id)
-        if shuttle.car != None and shuttle.driver !=None and shuttle.car.space > shuttle.passenger_set.count():
-            form = PassengerForm(request.POST)
-            if form.is_valid():
-                passenger = Passenger(nick=form.cleaned_data['nick'], mail=form.cleaned_data['email'], shuttle=shuttle)
-                passenger.save()
-                messages.success(request, 'You have signed up for {}'.format(shuttle))
-                if form.cleaned_data['email']:
-                    send_mail('Sign Up for Shuttle {}'.format(shuttle),"Ohai,\n\nYou have been signed up to the shuttle {}.\nTo remove yourself from the Shuttle open {}\n\nHave a nice day".format(shuttle, request.build_absolute_uri(reverse('shuttle:remove', args=[shuttle.id,passenger.token]))), 'shuttle@spahan.ch', [ form.cleaned_data['email'] ], fail_silently=False)
-                return HttpResponseRedirect(reverse('shuttle:detail', args=(shuttle.id,)))
+        form = PassengerForm(request.POST)
+        if form.is_valid():
+            if shuttle.car == None or shuttle.driver == None:
+                messages.info(request, 'You can not sign up for this shuttle as it does not have a driver or car assigned. Please try again later')
+                return HttpResponseRedirect(reverse('shuttle:index'))
+            if shuttle.passenger_set.count() >= shuttle.car.space:
+                message.info(request, 'Sorry, this shuttle is already full. Try another one')
+                return HttpResponseRedirect(reverse('shuttle:index'))
+            passenger = Passenger(nick=form.cleaned_data['nick'], mail=form.cleaned_data['email'], shuttle=shuttle)
+            passenger.save()
+            messages.success(request, 'You have signed up for {}'.format(shuttle))
+            if form.cleaned_data['email']:
+                send_mail('Sign Up for Shuttle {}'.format(shuttle),"Ohai,\n\nYou have been signed up to the shuttle {}.\nTo remove yourself from the Shuttle open {}\n\nHave a nice day".format(shuttle, request.build_absolute_uri(reverse('shuttle:remove', args=[shuttle.id,passenger.token]))), 'shuttle@spahan.ch', [ form.cleaned_data['email'] ], fail_silently=True)
         else:
-            messages.info(request, 'You can not sign up for this shuttle as it does not have a driver or car assigned. Please try again later.')
-            return HttpResponseRedirect(reverse('shuttle:index'))
-    else:
-        form = PassengerForm()
-    return render(request, 'shuttle/detail.html', { 'shuttle':shuttle, 'form':form })
+            messages.warning(request,'There is a Problem with your input:' + ''.join(['{}: {}'.format(key, error) for key in form.errors.keys() for error in form.errors[key]]))
+    return HttpResponseRedirect(reverse('shuttle:detail', args=(shuttle.id,)))
 
 def remove_passenger(request, shuttle_id, token):
     shuttle = get_object_or_404(Shuttle, pk=shuttle_id)
